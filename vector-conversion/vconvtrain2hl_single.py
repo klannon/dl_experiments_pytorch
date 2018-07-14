@@ -20,10 +20,10 @@ parser.add_argument('testfile',
 parser.add_argument('-o','--out', dest='outbase', metavar='OUTBASE',
                         help='File name base (no extension)')
 
-parser.add_argument('-l','--layer1-nodes',
+parser.add_argument('-h','--layer1-nodes',
                         type=int, help='Number of nodes in the first hidden layer')
     
-parser.add_argument('-t','--layer2-nodes',
+parser.add_argument('-l','--layer2-nodes',
                         type=int, help='Number of nodes in the second hidden layer')
 
 parser.add_argument('-t','--trials',
