@@ -3,8 +3,8 @@
 #$ -m abe
 #$ -pe smp 5			     # request cores
 #$ -q gpu
-#$ -l gpu_card=1#$ -N vconv1hl       # name for the job
-#$ -t 1-4			     # specify the number of jobs (defined in argslist below)
+#$ -l gpu_card=1#$ -N vconv2hl       # name for the job
+#$ -t 1-5			     # specify the number of jobs (defined in argslist below)
 #$ -o vconv2hlresults	 	     # result file name
 
 chmod +x ~/vconvtrain2hl.py	     # giving permissions to run the program
@@ -18,7 +18,7 @@ set arglist=( "-o vconv2hl_1 -l 500 -s 10 -e 100 -i 10 -t 3 -b 250 -n 400 -v 300
 		)
 
 set args = "$arglist[$SGE_TASK_ID]"
-set cmd = "../../vconvtrain.py ../../vconvdataset.npz ../../vconvdataset_test.npz $args"	# specify where the program and datasets are
+set cmd = "../../vconvtrain2hl.py ../../vconvdataset.npz ../../vconvdataset_test.npz $args"	# specify where the program and datasets are
 
 module load python/3.6.0
 
