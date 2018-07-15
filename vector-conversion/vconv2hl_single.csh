@@ -16,7 +16,7 @@ set arglist=( "-o vconv2hl_1 -h 500 -l 500 -i 10 -t 3 -b 250 -n 400 -v 30000" \
 		)
 
 set args = "$arglist[$SGE_TASK_ID]"
-set cmd = "../../vconvtrain2hl_single.py ../../vconvdataset.npz ../../vconvdataset_test.npz $args"	# specify where the program and datasets are
+set cmd = "../../vconvtrain2hl_single.py ../../vconvdataset10M.npz ../../vconvdataset10M_test.npz $args"	# specify where the program and datasets are
 
 module load python/3.6.0
 
