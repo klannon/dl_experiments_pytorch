@@ -209,8 +209,8 @@ model = nn.Sequential(network)
 model = model.cuda()
 
 for trial in range(trials):
-    run_training(model = model, modelpath = 'v_conv_model_{}node_{}'.format(node,trial), trainset = train_set, validsize = valid_size, numepochs = n_epochs, batchsize = batch_size, seed = seed)
-    print('Training complete: {} node model, trial {}'.format(node,trial))
+    run_training(model = model, modelpath = 'v_conv_model__{}_{}node_{}'.format(hl1_nodes,hl2_nodes,trial), trainset = train_set, validsize = valid_size, numepochs = n_epochs, batchsize = batch_size, seed = seed)
+    print('Training complete: {}, {} node model, trial {}'.format(hl1_nodes,hl2_nodes,trial))
 
 
 ## Testing the models
