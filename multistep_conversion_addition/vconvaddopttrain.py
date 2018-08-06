@@ -17,7 +17,7 @@ parser.add_argument('trainfile',
                         help='File name for training set')
 
 parser.add_argument('-o','--out', dest='outbase', metavar='OUTBASE',
-                        help='File name base (no extension)')
+                        help='File name base for saving the models (trial number will be appended)')
 
 parser.add_argument('-b','--batch-size',
                         default=250, type=int, help='Batch size for data during training and testing')
@@ -28,14 +28,31 @@ parser.add_argument('-n','--num-epochs', default=200, type=int,
 parser.add_argument('-v','--valid-size', type=int, 
                         help='Size of the validation set')
 
+parser.add_argument('-t','--trials', type=int, 
+                        help='Number of trials for the model')
+
+parser.add_argument('-h1','--hl1-nodes', type=int, 
+                        help='Number of nodes in the first hidden layer of the conversion network')
+
+parser.add_argument('-h2','--hl2-nodes', type=int, 
+                        help='Number of nodes in the second hidden layer of the conversion network. 
+                            If no second layer wanted, choose zero.')
+
+parser.add_argument('-h3','--hl3-nodes', type=int, 
+                        help='Number of nodes in the third hidden layer of the conversion network. 
+                            If no third layer wanted, choose zero.')
+
 args = parser.parse_args()
 
 ## User Inputs
 
 infile = args.trainfile
+outfile = args.outbase
 seed = np.random.randint(low=0, high=1000000, size=1)
-H = 270
-trials = 3
+H1 = args.hl1_nodes
+H2 = args.hl2_nodes
+H3 = args.hl3_nodes                   
+trials = args.trials
 batch_size = args.batch_size
 valid_size = args.valid_size
 n_epochs = args.num_epochs
@@ -76,21 +93,66 @@ train_set = torch.utils.data.TensorDataset(inputs, outputs)
 # defining model class and forward process
 
 class SharedModel(torch.nn.Module):
-    def __init__(self,H):
-        super(SharedModel,self).__init__()
-        self.linear1 = torch.nn.Linear(3,H)
-        torch.nn.init.kaiming_normal_(self.linear1.weight,a=0.25, nonlinearity='leaky_relu')
-        torch.nn.init.constant_(self.linear1.bias,0)
-        self.activation = torch.nn.PReLU()
-        self.linear2 = torch.nn.Linear(H,3)
-        torch.nn.init.kaiming_normal_(self.linear2.weight,a=0.25, nonlinearity='leaky_relu')
-        torch.nn.init.constant_(self.linear2.bias,0)
-        self.linear3 = torch.nn.Linear(6,3)
-        torch.nn.init.kaiming_normal_(self.linear3.weight,a=0.25, nonlinearity='leaky_relu')
-        torch.nn.init.constant_(self.linear3.bias,0)
-        self.linear4 = torch.nn.Linear(3,3)
-        torch.nn.init.kaiming_normal_(self.linear4.weight,a=0.25, nonlinearity='leaky_relu')
-        torch.nn.init.constant_(self.linear4.bias,0)
+    def __init__(self,H1, H2, H3):
+        for H2 == H3 == 0:
+          super(SharedModel,self).__init__()
+          self.linear1 = torch.nn.Linear(3,H1)
+          torch.nn.init.kaiming_normal_(self.linear1.weight,a=0.25, nonlinearity='leaky_relu')
+          torch.nn.init.constant_(self.linear1.bias,0)
+          self.activation = torch.nn.PReLU()
+          self.linear2 = torch.nn.Linear(H1,3)
+          torch.nn.init.kaiming_normal_(self.linear2.weight,a=0.25, nonlinearity='leaky_relu')
+          torch.nn.init.constant_(self.linear2.bias,0)
+          self.linear3 = torch.nn.Linear(6,3)
+          torch.nn.init.kaiming_normal_(self.linear3.weight,a=0.25, nonlinearity='leaky_relu')
+          torch.nn.init.constant_(self.linear3.bias,0)
+          self.linear4 = torch.nn.Linear(3,3)
+          torch.nn.init.kaiming_normal_(self.linear4.weight,a=0.25, nonlinearity='leaky_relu')
+          torch.nn.init.constant_(self.linear4.bias,0)
+                    
+         for H2 > 0 and H3 == 0:
+          super(SharedModel,self).__init__()
+          self.linear1 = torch.nn.Linear(3,H1)
+          torch.nn.init.kaiming_normal_(self.linear1.weight,a=0.25, nonlinearity='leaky_relu')
+          torch.nn.init.constant_(self.linear1.bias,0)
+          self.activation = torch.nn.PReLU()
+          self.linear2 = torch.nn.Linear(H1,H2)
+          torch.nn.init.kaiming_normal_(self.linear2.weight,a=0.25, nonlinearity='leaky_relu')
+          torch.nn.init.constant_(self.linear2.bias,0)
+          self.activation = torch.nn.PReLU()
+          self.linear3 = torch.nn.Linear(H2,3)
+          torch.nn.init.kaiming_normal_(self.linear3.weight,a=0.25, nonlinearity='leaky_relu')
+          torch.nn.init.constant_(self.linear3.bias,0)
+          self.linear4 = torch.nn.Linear(6,3)
+          torch.nn.init.kaiming_normal_(self.linear4.weight,a=0.25, nonlinearity='leaky_relu')
+          torch.nn.init.constant_(self.linear4.bias,0)
+          self.linear5 = torch.nn.Linear(3,3)
+          torch.nn.init.kaiming_normal_(self.linear5.weight,a=0.25, nonlinearity='leaky_relu')
+          torch.nn.init.constant_(self.linear5.bias,0)
+                    
+         for H2 > 0 and H3 > 0:
+          super(SharedModel,self).__init__()
+          self.linear1 = torch.nn.Linear(3,H1)
+          torch.nn.init.kaiming_normal_(self.linear1.weight,a=0.25, nonlinearity='leaky_relu')
+          torch.nn.init.constant_(self.linear1.bias,0)
+          self.activation = torch.nn.PReLU()
+          self.linear2 = torch.nn.Linear(H1,H2)
+          torch.nn.init.kaiming_normal_(self.linear2.weight,a=0.25, nonlinearity='leaky_relu')
+          torch.nn.init.constant_(self.linear2.bias,0)
+          self.activation = torch.nn.PReLU()
+          self.linear3 = torch.nn.Linear(H2,H3)
+          torch.nn.init.kaiming_normal_(self.linear3.weight,a=0.25, nonlinearity='leaky_relu')
+          torch.nn.init.constant_(self.linear3.bias,0)
+          self.activation = torch.nn.PReLU()
+          self.linear4 = torch.nn.Linear(H3,3)
+          torch.nn.init.kaiming_normal_(self.linear4.weight,a=0.25, nonlinearity='leaky_relu')
+          torch.nn.init.constant_(self.linear4.bias,0)
+          self.linear5 = torch.nn.Linear(6,3)
+          torch.nn.init.kaiming_normal_(self.linear5.weight,a=0.25, nonlinearity='leaky_relu')
+          torch.nn.init.constant_(self.linear5.bias,0)
+          self.linear6 = torch.nn.Linear(3,3)
+          torch.nn.init.kaiming_normal_(self.linear6.weight,a=0.25, nonlinearity='leaky_relu')
+          torch.nn.init.constant_(self.linear6.bias,0)
 
     def forward(self,x):
         vars = torch.chunk(x,2,1)
@@ -106,7 +168,7 @@ class SharedModel(torch.nn.Module):
         x_pred = self.linear4(o)
         return x_pred     
 
-model = SharedModel(H)
+model = SharedModel(H1,H2,H3)
 model = model.cuda()
 
 ## Function Definitons
@@ -223,7 +285,7 @@ def run_training(model, modelpath, trainset, validsize, numepochs, batchsize, se
 
 for trial in range(trials):
     # train the model
-    run_training(model=model, modelpath='vconvaddopt_270_270_6_3nodes_{}'.format(trial), trainset=train_set, validsize=valid_size, 
+    run_training(model=model, modelpath='outfile_{}'.format(trial), trainset=train_set, validsize=valid_size, 
                 numepochs=n_epochs, batchsize=batch_size, seed=seed)
 
     print('Finished!')
