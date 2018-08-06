@@ -320,7 +320,7 @@ def run_training(model, modelpath, trainset, validsize, numepochs, batchsize, se
 
 for trial in range(trials):
     # train the model
-    run_training(model=model, modelpath='outfile_{}'.format(trial), trainset=train_set, validsize=valid_size, 
+    run_training(model=model, modelpath='{}_{}'.format(outfile,trial), trainset=train_set, validsize=valid_size, 
                 numepochs=n_epochs, batchsize=batch_size, seed=seed)
 
     print('Finished!')
