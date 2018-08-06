@@ -155,18 +155,53 @@ class SharedModel(torch.nn.Module):
           torch.nn.init.constant_(self.linear6.bias,0)
 
     def forward(self,x):
-        vars = torch.chunk(x,2,1)
-        conv_results = []
-        for v in vars:
-            o = self.linear1(v)
-            o = self.activation(o)
-            o = self.linear2(o)
-            conv_results.append(o)
-        x_cat = torch.cat(conv_results,1)
-        o = self.linear3(x_cat)
-        o = self.activation(o)
-        x_pred = self.linear4(o)
-        return x_pred     
+        for H2 == H3 == 0:
+          vars = torch.chunk(x,2,1)
+          conv_results = []
+          for v in vars:
+              o = self.linear1(v)
+              o = self.activation(o)
+              o = self.linear2(o)
+              conv_results.append(o)
+          x_cat = torch.cat(conv_results,1)
+          o = self.linear3(x_cat)
+          o = self.activation(o)
+          x_pred = self.linear4(o)
+          return x_pred
+                    
+        for H2 > 0 and H3 == 0:
+          vars = torch.chunk(x,2,1)
+          conv_results = []
+          for v in vars:
+              o = self.linear1(v)
+              o = self.activation(o)
+              o = self.linear2(o)
+              o = self.activation(o)
+              o = self.linear3(o)
+              conv_results.append(o)
+          x_cat = torch.cat(conv_results,1)
+          o = self.linear4(x_cat)
+          o = self.activation(o)
+          x_pred = self.linear5(o)
+          return x_pred  
+                    
+        for H2 > 0 and H3 > 0:
+          vars = torch.chunk(x,2,1)
+          conv_results = []
+          for v in vars:
+              o = self.linear1(v)
+              o = self.activation(o)
+              o = self.linear2(o)
+              o = self.activation(o)
+              o = self.linear3(o)
+              o = self.activation(o)
+              o = self.linear4(o)
+              conv_results.append(o)
+          x_cat = torch.cat(conv_results,1)
+          o = self.linear5(x_cat)
+          o = self.activation(o)
+          x_pred = self.linear6(o)
+          return x_pred  
 
 model = SharedModel(H1,H2,H3)
 model = model.cuda()
