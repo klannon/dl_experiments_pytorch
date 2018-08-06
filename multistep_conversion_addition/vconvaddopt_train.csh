@@ -1,5 +1,5 @@
 #!/bin/csh
-#$ -M name@email.edu                          # email address for job updates
+#$ -M name@email.com                          # email address for job updates
 #$ -m abe
 #$ -pe smp 4                                  # request cores
 #$ -q gpu
