@@ -4,7 +4,7 @@
 #$ -pe smp 3				# request cores
 #$ -q gpu
 #$ -l gpu_card=1#$ -N vconvaddbb	# name for the job
-#$ -t 3 				# specify the number of jobs (defined in argslist below)
+#$ -t 1-3 				# specify the number of jobs (defined in argslist below)
 #$ -o vconvaddbb_results		# result file name
 
 chmod +x ~/vconvaddbb.py		# giving permissions to run the program
