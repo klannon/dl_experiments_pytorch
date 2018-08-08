@@ -4,7 +4,7 @@
 #$ -pe smp 5					# request cores
 #$ -q gpu
 #$ -l gpu_card=1#$ -N vconvaddopt_test		# name for the job
-#$ -t 5						# specify the number of jobs (defined in argslist below)
+#$ -t 1-5						# specify the number of jobs (defined in argslist below)
 #$ -o vconvaddopt_test_results			# result file name
 
 chmod +x ~/vconvaddopttest.py			# giving permissions to run the program
