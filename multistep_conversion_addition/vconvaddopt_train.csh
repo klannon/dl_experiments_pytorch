@@ -4,7 +4,7 @@
 #$ -pe smp 4                                  # request cores
 #$ -q gpu
 #$ -l gpu_card=1#$ -N vconvaddopt_train       # name for the job
-#$ -t 4                                       # specify the number of jobs (defined in argslist below)
+#$ -t 1-4                                     # specify the number of jobs (defined in argslist below)
 #$ -o vconvaddopt_train                       # result file name
 
 chmod +X ~/vconvaddopttrain.py                # giving permissions to run the program
